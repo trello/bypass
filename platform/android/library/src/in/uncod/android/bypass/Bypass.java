@@ -19,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.util.TypedValue;
 import in.uncod.android.bypass.Element.Type;
+import in.uncod.android.bypass.style.CodeBackgroundSpan;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
 
 import java.util.Map;
@@ -136,11 +137,16 @@ public class Bypass {
 		SpannableStringBuilder builder = new ReverseSpannableStringBuilder();
 
 		String text = element.getText();
+
+		/*
+		 * Normally in markdown, newlines aren't true breaks unless there's two spaces before it.
+		 * We ignore that for our own purposes. I'm leaving this commented out so diffs are easier.
 		if (element.size() == 0
 			&& element.getParent() != null
 			&& element.getParent().getType() != Type.BLOCK_CODE) {
 			text = text.replace('\n', ' ');
 		}
+		 */
 
 		// Retrieve the image now so we know whether we're going to have something to display later
 		// If we don't, then show the alt text instead (if available).
@@ -150,12 +156,6 @@ public class Bypass {
 		}
 
 		switch (type) {
-			case LIST:
-				if (element.getParent() != null
-					&& element.getParent().getType() == Type.LIST_ITEM) {
-					builder.append("\n");
-				}
-				break;
 			case LINEBREAK:
 				builder.append("\n");
 				break;
@@ -206,12 +206,7 @@ public class Bypass {
 		// element itself), hence subtracting a number from that count gives us the index
 		// of the last child within the parent.
 		if (element.getParent() != null || indexWithinParent < (numberOfSiblings - 1)) {
-			if (type == Type.LIST_ITEM) {
-				if (element.size() == 0 || !element.children[element.size() - 1].isBlockElement()) {
-					builder.append("\n");
-				}
-			}
-			else if (element.isBlockElement() && type != Type.BLOCK_QUOTE) {
+			if (element.isBlockElement() && type != Type.BLOCK_QUOTE && type != Type.LIST_ITEM) {
 				if (type == Type.LIST) {
 					// If this is a nested list, don't include newlines
 					if (element.getParent() == null || element.getParent().getType() != Type.LIST_ITEM) {
@@ -249,8 +244,9 @@ public class Bypass {
 				setSpan(builder, new StyleSpan(Typeface.BOLD_ITALIC));
 				break;
 			case BLOCK_CODE:
-				setSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
-				setSpan(builder, new TypefaceSpan("monospace"));
+				setBlockSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
+				setBlockSpan(builder, new TypefaceSpan("monospace"));
+				setBlockSpan(builder, new CodeBackgroundSpan(mCodeBlockIndent));
 				break;
 			case CODE_SPAN:
 				setSpan(builder, new TypefaceSpan("monospace"));
