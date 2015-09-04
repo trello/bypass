@@ -19,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.util.TypedValue;
 import in.uncod.android.bypass.Element.Type;
+import in.uncod.android.bypass.style.CodeBackgroundSpan;
 import in.uncod.android.bypass.style.HorizontalLineSpan;
 
 import java.util.Map;
@@ -254,8 +255,9 @@ public class Bypass {
 				setSpan(builder, new StyleSpan(Typeface.BOLD_ITALIC));
 				break;
 			case BLOCK_CODE:
-				setSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
-				setSpan(builder, new TypefaceSpan("monospace"));
+				setBlockSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
+				setBlockSpan(builder, new TypefaceSpan("monospace"));
+				setBlockSpan(builder, new CodeBackgroundSpan(mCodeBlockIndent));
 				break;
 			case CODE_SPAN:
 				setSpan(builder, new TypefaceSpan("monospace"));
