@@ -136,11 +136,16 @@ public class Bypass {
 		SpannableStringBuilder builder = new ReverseSpannableStringBuilder();
 
 		String text = element.getText();
+
+		/*
+		 * Normally in markdown, newlines aren't true breaks unless there's two spaces before it.
+		 * We ignore that for our own purposes. I'm leaving this commented out so diffs are easier.
 		if (element.size() == 0
 			&& element.getParent() != null
 			&& element.getParent().getType() != Type.BLOCK_CODE) {
 			text = text.replace('\n', ' ');
 		}
+		 */
 
 		// Retrieve the image now so we know whether we're going to have something to display later
 		// If we don't, then show the alt text instead (if available).
