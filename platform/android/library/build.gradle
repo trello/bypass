@@ -1,0 +1,18 @@
+apply plugin: 'android-library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion rootProject.ext.targetSdkVersion
+    }
+
+    sourceSets {
+        main.manifest.srcFile 'AndroidManifest.xml'
+        main.java.srcDirs = ['src']
+        main.res.srcDirs = ['res']
+        main.jniLibs.srcDirs = ['compiledJni']
+    }
+}
