@@ -156,12 +156,6 @@ public class Bypass {
 		}
 
 		switch (type) {
-			case LIST:
-				if (element.getParent() != null
-					&& element.getParent().getType() == Type.LIST_ITEM) {
-					builder.append("\n");
-				}
-				break;
 			case LINEBREAK:
 				builder.append("\n");
 				break;
@@ -212,12 +206,7 @@ public class Bypass {
 		// element itself), hence subtracting a number from that count gives us the index
 		// of the last child within the parent.
 		if (element.getParent() != null || indexWithinParent < (numberOfSiblings - 1)) {
-			if (type == Type.LIST_ITEM) {
-				if (element.size() == 0 || !element.children[element.size() - 1].isBlockElement()) {
-					builder.append("\n");
-				}
-			}
-			else if (element.isBlockElement() && type != Type.BLOCK_QUOTE) {
+			if (element.isBlockElement() && type != Type.BLOCK_QUOTE && type != Type.LIST_ITEM) {
 				if (type == Type.LIST) {
 					// If this is a nested list, don't include newlines
 					if (element.getParent() == null || element.getParent().getType() != Type.LIST_ITEM) {
