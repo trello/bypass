@@ -38,6 +38,7 @@ public class Bypass {
 	private final int mHruleSize;
 
 	private final int mHruleTopBottomPadding;
+	private final float mCodeBlockPadding;
 
 	// Keeps track of the ordered list number for each LIST element.
 	// We need to track multiple ordered lists at once because of nesting.
@@ -55,6 +56,7 @@ public class Bypass {
 		mCodeBlockIndent = 10;
 		mHruleSize = 2;
 		mHruleTopBottomPadding = 20;
+		mCodeBlockPadding = 4;
 	}
 
 	public Bypass(Context context) {
@@ -79,6 +81,8 @@ public class Bypass {
 			mOptions.mHruleSize, dm);
 
 		mHruleTopBottomPadding = (int) dm.density * 10;
+
+		mCodeBlockPadding = dm.density * 2;
 	}
 
 	public CharSequence markdownToSpannable(String markdown) {
@@ -246,7 +250,7 @@ public class Bypass {
 			case BLOCK_CODE:
 				setBlockSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
 				setBlockSpan(builder, new TypefaceSpan("monospace"));
-				setBlockSpan(builder, new CodeBackgroundSpan(mCodeBlockIndent));
+				setBlockSpan(builder, new CodeBackgroundSpan(mCodeBlockIndent, mCodeBlockPadding));
 				break;
 			case CODE_SPAN:
 				setSpan(builder, new TypefaceSpan("monospace"));
