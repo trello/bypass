@@ -12,12 +12,14 @@ public class CodeBackgroundSpan implements LineBackgroundSpan {
 
     private static final int GRAY = Color.argb(255, 236, 239, 241);
 
-    private int mIndent;
+    private final int mIndent;
+    private final float mPadding;
 
-    private Paint mPaint;
+    private final Paint mPaint;
 
-    public CodeBackgroundSpan(int indent) {
+    public CodeBackgroundSpan(int indent, float padding) {
         mIndent = indent;
+        mPadding = padding;
 
         mPaint = new Paint();
         mPaint.setColor(GRAY);
@@ -27,6 +29,6 @@ public class CodeBackgroundSpan implements LineBackgroundSpan {
     public void drawBackground(
         Canvas c, Paint p, int left, int right, int top, int baseline, int bottom, CharSequence text, int start,
         int end, int lnum) {
-        c.drawRect(left + mIndent - 4, top - 4, right, bottom, mPaint);
+        c.drawRect(left + mIndent - mPadding, top - mPadding, right, bottom, mPaint);
     }
 }
