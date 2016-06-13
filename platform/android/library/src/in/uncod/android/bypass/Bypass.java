@@ -258,6 +258,9 @@ public class Bypass {
 			case LINK:
 			case AUTOLINK:
 				String link = element.getAttribute("link");
+				if (link == null) {
+					link = "";
+				}
 				if (!TextUtils.isEmpty(link) && Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
 					link = "mailto:" + link;
 				}
