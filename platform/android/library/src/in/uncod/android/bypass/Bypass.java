@@ -279,7 +279,7 @@ public class Bypass {
 				break;
 			case IMAGE:
 				if (imageDrawable != null) {
-					setSpan(builder, new ImageSpan(imageDrawable));
+					setSpan(builder, new ImageSpan(imageDrawable, element.getAttribute("link")));
 				}
 				break;
 		}
