@@ -258,7 +258,7 @@ public class Bypass {
 			case LINK:
 			case AUTOLINK:
 				String link = element.getAttribute("link");
-				if (Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
+				if (!TextUtils.isEmpty(link) && Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
 					link = "mailto:" + link;
 				}
 				setSpan(builder, new URLSpan(link));
@@ -279,7 +279,7 @@ public class Bypass {
 				break;
 			case IMAGE:
 				if (imageDrawable != null) {
-					setSpan(builder, new ImageSpan(imageDrawable));
+					setSpan(builder, new ImageSpan(imageDrawable, element.getAttribute("link")));
 				}
 				break;
 		}
