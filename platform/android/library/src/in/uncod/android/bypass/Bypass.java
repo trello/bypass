@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -86,17 +87,17 @@ public class Bypass {
 	}
 
 	public CharSequence markdownToSpannable(String markdown) {
-		return markdownToSpannable(markdown, null);
+		return markdownToSpannable(markdown, null, null);
 	}
 
-	public CharSequence markdownToSpannable(String markdown, ImageGetter imageGetter) {
+	public CharSequence markdownToSpannable(String markdown, String defaultScheme, ImageGetter imageGetter) {
 		Document document = processMarkdown(markdown);
 
 		int size = document.getElementCount();
 		CharSequence[] spans = new CharSequence[size];
 
 		for (int i = 0; i < size; i++) {
-			spans[i] = recurseElement(document.getElement(i), i, size, imageGetter);
+			spans[i] = recurseElement(document.getElement(i), i, size, defaultScheme, imageGetter);
 		}
 
 		return TextUtils.concat(spans);
@@ -108,7 +109,7 @@ public class Bypass {
 	// the 'element' parameter, as in "How many siblings are you?" rather than "How many siblings do
 	// you have?".
 	private CharSequence recurseElement(Element element, int indexWithinParent, int numberOfSiblings,
-			ImageGetter imageGetter) {
+			String defaultScheme, ImageGetter imageGetter) {
 
 		Type type = element.getType();
 
@@ -128,7 +129,7 @@ public class Bypass {
 		CharSequence[] spans = new CharSequence[size];
 		
 		for (int i = 0; i < size; i++) {
-			spans[i] = recurseElement(element.children[i], i, size, imageGetter);
+			spans[i] = recurseElement(element.children[i], i, size, defaultScheme, imageGetter);
 		}
 
 		// Clean up after we're done
@@ -258,11 +259,17 @@ public class Bypass {
 			case LINK:
 			case AUTOLINK:
 				String link = element.getAttribute("link");
-				if (link == null) {
+				if (TextUtils.isEmpty(link)) {
 					link = "";
 				}
-				if (!TextUtils.isEmpty(link) && Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
+				else if (Patterns.EMAIL_ADDRESS.matcher(link).matches()) {
 					link = "mailto:" + link;
+				}
+				else if (defaultScheme != null) {
+					Uri uri = Uri.parse(link);
+					if (TextUtils.isEmpty(uri.getScheme())) {
+						link = "http://" + link;
+					}
 				}
 				setSpan(builder, new URLSpan(link));
 				break;
