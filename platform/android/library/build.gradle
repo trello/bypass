@@ -1,12 +1,12 @@
 apply plugin: 'android-library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion buildConfig.compileSdk
     buildToolsVersion rootProject.ext.buildToolsVersion
     
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion buildConfig.targetSdk
     }
 
     sourceSets {
